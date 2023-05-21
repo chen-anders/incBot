@@ -1,0 +1,26 @@
+#!/bin/bash -e
+
+AWS_REGION="$1"
+LAMBDA_PREFIX="$2"
+
+if [[ -z "${AWS_REGION}" ]]; then
+  echo "AWS region must be passed in as part of first argument"
+  echo "Usage: ./bin/deploy <AWS_REGION> <LAMBDA_PREFIX>"
+  exit 1
+fi
+
+if [[ -z "${LAMBDA_PREFIX}" ]]; then
+  echo "Lambda Prefix (equivalent to var.name from TF module) must be specified."
+  echo "Usage: ./bin/deploy <AWS_REGION> <LAMBDA_PREFIX>"
+  exit 1
+fi
+
+rm -rf lambda-function.zip
+./bin/generate-lambda-zip-file
+
+HANDLERS=("main" "new_incident")
+for handler in ${HANDLERS[@]}; do
+  handler_name="${LAMBDA_PREFIX}_handler_${handler}"
+  aws --region "${AWS_REGION}" lambda update-function-code --function-name "${handler_name}" --zip-file fileb://lambda-function.zip --publish --no-cli-pager
+done
+rm -rf lambda-function.zip
