@@ -1,4 +1,4 @@
-require 'aws-sdk'
+require 'aws-sdk-lambda'
 require 'aws-sdk-secretsmanager'
 require 'base64'
 require 'json'
