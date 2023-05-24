@@ -3,6 +3,7 @@ require 'json'
 require 'securerandom'
 require_relative 'aws_helpers'
 require_relative 'slack_helpers'
+require_relative 'app_mention_event_handlers/incident_helpers'
 
 INCIDENT_BROADCAST_CHANNEL_ID = (ENV['INCIDENT_BROADCAST_CHANNEL_ID'] || '').freeze
 
@@ -27,7 +28,7 @@ def lambda_handler(event:, context:)
     if resp.code.to_i != 200
       slack_helper.post_message(user_id, "Unable to broadcast new incident status to <##{channel_id}>")
     end
-    slack_helper.set_channel_topic(channel_id, "Incident Commander: <@#{incident_commander}>")
+    set_incident_topic(slack_helper, channel_id, incident_commander, incident_name)
     if INCIDENT_BROADCAST_CHANNEL_ID != ''
       slack_helper.post_channel_message(INCIDENT_BROADCAST_CHANNEL_ID, incident_message_body, title: incident_message_title, color: "#FF0000")
     end
@@ -59,6 +60,15 @@ def create_incident_channel(slack_helper, user_id, incident_name)
   end
 end
 
+def set_incident_topic(slack_helper, channel_id, commander, incident_name)
+  topic = IncidentHelpers.serialize_topic({
+    status: 'Ongoing',
+    commander: "<@#{commander}>",
+    incident_name: incident_name[0...150]
+  })
+  slack_helper.set_channel_topic(channel_id, topic)
+end
+
 def format_incident_name(incident_name)
   # Lowercase the incident name
   formatted_name = incident_name.downcase
@@ -76,14 +86,14 @@ def format_incident_name(incident_name)
 end
 
 def new_incident_body_text(incident_commander, user_id, incident_channel_id, incident_description, incident_priority)
-
-  <<~EOM
+  text = <<~EOM
 *:fire_engine: Incident Commander*: <@#{incident_commander}>
 *:speech_balloon: Reported By*: <@#{user_id}>
 *:vertical_traffic_light: Priority*: #{incident_priority} #{priority_emoji(incident_priority)}
 *:loudspeaker: Incident Channel*: <##{incident_channel_id}>
-*:memo: Description*: #{incident_description}
   EOM
+  text << "*:memo: Description*: #{incident_description}" unless incident_description.nil? || incident_description.strip == ''
+  text
 end
 
 def priority_emoji(incident_priority)

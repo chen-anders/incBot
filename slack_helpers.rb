@@ -65,6 +65,10 @@ class SlackHelpers
     make_post_request('chat.postMessage', params)
   end
 
+  def get_message_permalink(channel_id, message_ts)
+    make_get_request('chat.getPermalink', { channel: channel_id, message_ts: message_ts })
+  end
+
   def post_message(channel_id, text)
     params = { channel: channel_id }.merge(markdown_message_block(text))
     make_post_request('chat.postMessage', params)

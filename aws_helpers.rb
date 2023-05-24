@@ -9,7 +9,7 @@ AWS_REGION = (ENV['AWS_REGION'] || 'us-east-1').freeze
 
 class Secrets
   include Singleton
-  attr_reader :slack_signing_secret, :slack_bot_oauth_token
+  attr_reader :slack_signing_secret, :slack_bot_oauth_token, :pagerduty_api_key
 
   def initialize
     fetch_secrets
@@ -30,6 +30,7 @@ class Secrets
     # Access the required keys
     @slack_signing_secret = secret_data['SLACK_SIGNING_SECRET']
     @slack_bot_oauth_token = secret_data['SLACK_BOT_OAUTH_TOKEN']
+    @pagerduty_api_key = secret_data['PAGERDUTY_API_KEY']
   end
 end
 
