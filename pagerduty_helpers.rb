@@ -29,6 +29,24 @@ class PagerdutyHelpers
     ENV['PAGERDUTY_EMAIL']
   end
 
+  def self.get_all_oncall_teams
+    result = {}
+    if File.exists?(SERVICE_TEAM_MAPPINGS_JSON)
+      mappings = JSON.parse(File.read(SERVICE_TEAM_MAPPINGS_JSON))
+      mappings.each do |team|
+        team_name = team.dig('name')
+        team_aliases = team.dig('aliases') || []
+        service_id = team.dig('service_id')
+        next unless team_name && service_id
+        result[team_name] ||= []
+        team_aliases.each do |team_alias|
+          result[team_name] << team_alias
+        end
+      end
+    end
+    result
+  end
+
   class PagerDutyRequestError < StandardError; end
   class NoEscalationPolicyFound < StandardError; end
   class CreateIncidentError < StandardError; end

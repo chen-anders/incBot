@@ -42,6 +42,8 @@ class EventWebhookHandler
           AppMentionEventHandlers::ResolveIncidentHandler.new(body, user_id, command_args).handle
         when 'incident-handoff', 'handoff'
           AppMentionEventHandlers::HandoffIncidentHandler.new(body, user_id, command_args).handle
+        when 'oncall-team', 'oncall-teams'
+          AppMentionEventHandlers::OncallTeamsHandler.new(body, user_id, command_args).handle
         when 'oncall'
           AppMentionEventHandlers::OncallHandler.new(body, user_id, command_args).handle
         when 'page'
