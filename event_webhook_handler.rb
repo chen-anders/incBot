@@ -49,7 +49,7 @@ class EventWebhookHandler
         when 'page'
           AppMentionEventHandlers::PageHandler.new(body, user_id, command_args).handle
         else
-          slack_helper.reply_in_thread(channel_id, ts, ":x: `#{command}` is not a valid command. Valid commands: `update-incident`, `resolve-incident`, `incident-handoff`, `oncall`, `page`")
+          slack_helper.reply_in_thread(channel_id, ts, ":x: `#{command}` is not a valid command. Valid commands: `update-incident`, `resolve-incident`, `incident-handoff`, `oncall`, `oncall-teams`, `page`")
         end
       end
     end
