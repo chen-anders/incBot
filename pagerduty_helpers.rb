@@ -25,6 +25,10 @@ class PagerdutyHelpers
     end
   end
 
+  def self.pagerduty_email
+    ENV['PAGERDUTY_EMAIL']
+  end
+
   class PagerDutyRequestError < StandardError; end
   class NoEscalationPolicyFound < StandardError; end
   class CreateIncidentError < StandardError; end
@@ -49,6 +53,7 @@ class PagerdutyHelpers
   end
 
   def create_incident(oncall_team_name, title, description)
+    raise "Missing PAGERDUTY_EMAIL env variable" unless PagerdutyHelpers.pagerduty_email
     service_id = get_service_from_team_name(oncall_team_name)
     if service_id
       incident_params = {
@@ -60,7 +65,7 @@ class PagerdutyHelpers
           body: { type: 'incident_body', details: description }
         }
       }
-      resp = make_post_request('incidents', incident_params)
+      resp = make_post_request('incidents', incident_params, from_header: PagerdutyHelpers.pagerduty_email)
       if resp.code.to_i == 201
         parsed_resp = JSON.parse(resp.body)
         created_incident = parsed_resp.dig('incident')
@@ -117,13 +122,14 @@ class PagerdutyHelpers
     http.request(request)
   end
 
-  def make_post_request(resource, body = {})
+  def make_post_request(resource, body = {}, from_header: nil)
     uri = URI.parse("#{API_ENDPOINT}/#{resource}")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
 
     request =  Net::HTTP::Post.new(uri.request_uri)
     request = set_request_headers(request)
+    request['From'] = from_header if from_header
     request.body = body.to_json
     http.request(request)
   end
