@@ -1,6 +1,76 @@
 [
   {
-    "name": "test-svc",
+    "name": "triage",
+    "aliases": ["triagers"],
+    "service_id": "PQ11EW6"
+  },
+  {
+    "name": "mediaplatform",
+    "aliases": ["media-platform"],
+    "service_id": "PQNTTMG"
+  },
+  {
+    "name": "publish",
+    "aliases": [],
+    "service_id": "PZUIMWV"
+  },
+  {
+    "name": "platform",
+    "aliases": ["sre"],
+    "service_id": "P1PK264"
+  },
+  {
+    "name": "storefront",
+    "aliases": ["marketing-site"],
+    "service_id": "P7YRXBN"
+  },
+  {
+    "name": "analytics",
+    "aliases": ["stats"],
+    "service_id": "PAV8ZEW"
+  },
+  {
+    "name": "leadgen",
+    "aliases": [],
+    "service_id": "P6XIUQK"
+  },
+  {
+    "name": "edit",
+    "aliases": [],
+    "service_id": "PPDVHHZ"
+  },
+  {
+    "name": "record",
+    "aliases": [],
+    "service_id": "P947H59"
+  },
+  {
+    "name": "live",
+    "aliases": [],
+    "service_id": "PSKO233"
+  },
+  {
+    "name": "onboarding",
+    "aliases": [],
+    "service_id": "PSKO233"
+  },
+  {
+    "name": "pricing",
+    "aliases": ["billing"],
+    "service_id": "P7KIGV1"
+  },
+  {
+    "name": "discover",
+    "aliases": ["search"],
+    "service_id": "P34DC2E"
+  },
+  {
+    "name": "manage",
+    "aliases": [],
+    "service_id": "P7SWIH6"
+  },
+  {
+    "name": "anders-svc",
     "aliases": [],
     "service_id": "PUIPTQ7"
   }
