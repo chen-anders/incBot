@@ -9,10 +9,16 @@ require_relative 'interaction_payload_handler'
 INTERACTION_PAYLOAD_ROUTE = '/interaction_payload'.freeze
 EVENTS_ROUTE = '/events'.freeze
 HEALTHZ_ROUTE = '/healthz'.freeze
+LAMBDA_WARMER_ROUTE  = '/_lambda_warmer'.freeze
 
 def lambda_handler(event:, context:)
   path = event.dig('rawPath')
   return { statusCode: 200, body: 'OK' } if path == HEALTHZ_ROUTE
+  if path == LAMBDA_WARMER_ROUTE
+    STDERR.puts "Request to #{LAMBDA_WARMER_ROUTE} received"
+    Lambda.invoke_function(ENV.fetch('AWS_LAMBDA_FUNCTION_NAME'), { rawPath: HEALTHZ_ROUTE })
+    return { statusCode: 200, body: 'OK' }
+  end
   return { statusCode: 404, body: 'Not Found' } unless [INTERACTION_PAYLOAD_ROUTE, EVENTS_ROUTE].include?(path)
 
   already_authenticated = event.dig('lambda_auth') || false

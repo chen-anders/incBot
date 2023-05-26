@@ -20,3 +20,9 @@ variable "pagerduty_email" {
   type        = string
   description = "Email to be using in the from-header during incident creation"
 }
+
+variable "enable_lambda_warmer" {
+  type        = bool
+  description = "Enable a Cloudwatch Eventbridge trigger to keep the main lambda endpoint warm"
+  default     = false
+}
