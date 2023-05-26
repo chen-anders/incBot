@@ -71,13 +71,17 @@ end
 
 def format_incident_name(incident_name)
   # Lowercase the incident name
-  formatted_name = incident_name.downcase
+  formatted_name = incident_name.strip.downcase
   # Replace spaces with dashes
   formatted_name = formatted_name.gsub(' ', '-')
   # strip out non-alphanumeric chars and extra dashes
   formatted_name = formatted_name.gsub(/[^0-9a-zA-Z\-]/, '').gsub(/-+/, '-').strip
   # Truncate the string at 65 chars
   formatted_name = formatted_name[0, 65]
+  # Strip the last dashes in a string if any
+  while formatted_name.end_with?("-")
+    formatted_name = formatted_name[0..-2]
+  end
   # Prefix the string with "inc-YYYYMMDD-"
   current_date_time = DateTime.now
   current_date_time_string = current_date_time.strftime("%Y%m%d")
