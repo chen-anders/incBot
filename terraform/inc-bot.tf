@@ -6,4 +6,5 @@ module "inc-bot" {
 
   incident_broadcast_channel_id = "C23SFSW1L"
   pagerduty_email               = "engineering-accounts@wistia.com"
+  enable_lambda_warmer          = true
 }
