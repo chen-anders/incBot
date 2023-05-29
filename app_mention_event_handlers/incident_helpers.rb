@@ -11,6 +11,7 @@ class IncidentHelpers
   end
 
   def self.incident_broadcast_channel_id
+    return nil if ENV['INCIDENT_BROADCAST_CHANNEL_ID'] == ""
     ENV['INCIDENT_BROADCAST_CHANNEL_ID']
   end
 
