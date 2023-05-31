@@ -20,7 +20,7 @@ class EventWebhookHandler
   end
 
   def valid_cmd_txt
-    "Valid commands: `update-incident`, `resolve-incident`, `incident-handoff`, `oncall`, `oncall-teams`, `page`"
+    "Valid commands: `new-incident`, `update-incident`, `resolve-incident`, `incident-handoff`, `oncall`, `oncall-teams`, `page`"
   end
 
   def handle
