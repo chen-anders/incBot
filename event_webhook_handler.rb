@@ -42,6 +42,8 @@ class EventWebhookHandler
         case command
         when nil, 'help'
           slack_helper.reply_in_thread(channel_id, ts, valid_cmd_txt)
+        when 'create-incident', 'new-incident'
+          AppMentionEventHandlers::CreateIncidentHandler.new(body, user_id, command_args).handle
         when 'incident-update', 'update-incident'
           AppMentionEventHandlers::UpdateIncidentHandler.new(body, user_id, command_args).handle
         when 'resolve-incident'
