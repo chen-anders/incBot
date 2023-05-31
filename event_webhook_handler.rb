@@ -23,6 +23,22 @@ class EventWebhookHandler
     "Valid commands: `new-incident`, `update-incident`, `resolve-incident`, `incident-handoff`, `oncall`, `oncall-teams`, `page`"
   end
 
+  def usage_txt
+    <<~EOM
+    ---
+    Usage: `@incBot [optional args] <required args>`
+
+    *Check who is oncall for a service*: `@incBot oncall <service-name>`
+    *Look up defined oncall teams*: `@incBot oncall-teams`
+    *Page the current oncall for a service*: `@incBot page <service-name> <message>`
+
+    *Create Incident*: `@incBot new-incident [P1/P2/P3/P4/P5/leave blank if unknown] <incident-name>`
+    *Broadcast Incident Update*: `@incBot update-incident <message>`
+    *Broadcast Incident Resolution Note*: `@incBot resolve-incident <message>`
+    *Handoff Incident Commander Role*: `@incBot handoff <SLACK_USER or me>`
+    EOM
+  end
+
   def handle
     return verification_payload if is_verification?
     event_type = body.dig('event', 'type')
@@ -41,7 +57,7 @@ class EventWebhookHandler
 
         case command
         when nil, 'help'
-          slack_helper.reply_in_thread(channel_id, ts, valid_cmd_txt)
+          slack_helper.reply_in_thread(channel_id, ts, "#{valid_cmd_txt}\n#{usage_txt}")
         when 'create-incident', 'new-incident'
           AppMentionEventHandlers::CreateIncidentHandler.new(body, user_id, command_args).handle
         when 'incident-update', 'update-incident'
@@ -57,7 +73,7 @@ class EventWebhookHandler
         when 'page'
           AppMentionEventHandlers::PageHandler.new(body, user_id, command_args).handle
         else
-          slack_helper.reply_in_thread(channel_id, ts, ":x: `#{command}` is not a valid command. #{valid_cmd_txt}")
+          slack_helper.reply_in_thread(channel_id, ts, ":x: `#{command}` is not a valid command. #{valid_cmd_txt}\n#{usage_txt}")
         end
       end
     end
