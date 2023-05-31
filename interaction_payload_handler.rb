@@ -26,7 +26,7 @@ class InteractionPayloadHandler
       callback_id = body.dig('callback_id')
       user_id = body.dig('user', 'id')
       case callback_id
-      when 'new_incident'
+      when /^new_incident/
         # Construct the modal payload
         modal_payload = NewIncidentModal.modal_json(body.dig('trigger_id'), user_id)
         slack_helper.present_modal(modal_payload)
