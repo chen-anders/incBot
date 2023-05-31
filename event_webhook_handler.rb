@@ -19,6 +19,10 @@ class EventWebhookHandler
     { statusCode: 200, body: body.dig('challenge') }
   end
 
+  def valid_cmd_txt
+    "Valid commands: `update-incident`, `resolve-incident`, `incident-handoff`, `oncall`, `oncall-teams`, `page`"
+  end
+
   def handle
     return verification_payload if is_verification?
     event_type = body.dig('event', 'type')
@@ -32,10 +36,12 @@ class EventWebhookHandler
       if message_text.start_with?("<@#{user_id}>")
         message_text = message_text.sub("<@#{user_id}>", '')
         command = message_text.split(' ').first
-        command_args = message_text.sub(command, '').strip
+        command_args = (command ? message_text.sub(command, '').strip : '')
         ts = body.dig('event', 'thread_ts') || body.dig('event', 'ts')
 
         case command
+        when nil, 'help'
+          slack_helper.reply_in_thread(channel_id, ts, valid_cmd_txt)
         when 'incident-update', 'update-incident'
           AppMentionEventHandlers::UpdateIncidentHandler.new(body, user_id, command_args).handle
         when 'resolve-incident'
@@ -49,7 +55,7 @@ class EventWebhookHandler
         when 'page'
           AppMentionEventHandlers::PageHandler.new(body, user_id, command_args).handle
         else
-          slack_helper.reply_in_thread(channel_id, ts, ":x: `#{command}` is not a valid command. Valid commands: `update-incident`, `resolve-incident`, `incident-handoff`, `oncall`, `oncall-teams`, `page`")
+          slack_helper.reply_in_thread(channel_id, ts, ":x: `#{command}` is not a valid command. #{valid_cmd_txt}")
         end
       end
     end
