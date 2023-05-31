@@ -93,7 +93,7 @@ def new_incident_body_text(incident_commander, user_id, incident_channel_id, inc
   text = <<~EOM
 *:fire_engine: Incident Commander*: <@#{incident_commander}>
 *:speech_balloon: Reported By*: <@#{user_id}>
-*:vertical_traffic_light: Priority*: #{incident_priority} #{priority_emoji(incident_priority)}
+*:vertical_traffic_light: Priority*: #{incident_priority.upcase} #{priority_emoji(incident_priority)}
 *:loudspeaker: Incident Channel*: <##{incident_channel_id}>
   EOM
   text << "*:memo: Description*: #{incident_description}" unless incident_description.nil? || incident_description.strip == ''
