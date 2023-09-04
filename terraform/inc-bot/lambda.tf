@@ -17,7 +17,7 @@ resource "aws_lambda_function" "handlers" {
   package_type                   = "Zip"
   reserved_concurrent_executions = "-1"
   role                           = aws_iam_role.incident-helper-iam-role.arn
-  runtime                        = "ruby2.7"
+  runtime                        = "ruby3.2"
   filename                       = "../lambda-function.zip"
   publish                        = false
 

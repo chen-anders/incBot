@@ -31,7 +31,7 @@ class PagerdutyHelpers
 
   def self.get_all_oncall_teams
     result = {}
-    if File.exists?(SERVICE_TEAM_MAPPINGS_JSON)
+    if File.exist?(SERVICE_TEAM_MAPPINGS_JSON)
       mappings = JSON.parse(File.read(SERVICE_TEAM_MAPPINGS_JSON))
       mappings.each do |team|
         team_name = team.dig('name')
@@ -160,7 +160,7 @@ class PagerdutyHelpers
   end
 
   def load_team_mappings
-    if File.exists?(SERVICE_TEAM_MAPPINGS_JSON)
+    if File.exist?(SERVICE_TEAM_MAPPINGS_JSON)
       mappings = JSON.parse(File.read(SERVICE_TEAM_MAPPINGS_JSON))
       result = {}
       mappings.each do |team|
